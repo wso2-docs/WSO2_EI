@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>msf4j-service</artifactId>
+    <groupId>org.wso2.msf4j</groupId>
+    <version>2.2.0</version>
+    <relativePath>../pom.xml/pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.wso2</groupId>
+  <artifactId>Hospital-Service</artifactId>
+  <name>WSO2 MSF4J Microservice</name>
+  <version>2.0.0</version>
+  <repositories>
+    <repository>
+      <releases>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+      <id>wso2-nexus</id>
+      <name>WSO2 internal Repository</name>
+      <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+    </repository>
+    <repository>
+      <releases>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+      <id>wso2.releases</id>
+      <name>WSO2 internal Repository</name>
+      <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+    </repository>
+    <repository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <updatePolicy>daily</updatePolicy>
+      </snapshots>
+      <id>wso2.snapshots</id>
+      <name>Apache Snapshot Repository</name>
+      <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+  </repositories>
+  <properties>
+    <microservice.resourceClasses>org.wso2.service.hospital.GrandOakHospitalService,org.wso2.service.hospital.WillowGardensHospitalService,org.wso2.service.hospital.PineValleyHospitalService</microservice.resourceClasses>
+  </properties>
+</project>
+
