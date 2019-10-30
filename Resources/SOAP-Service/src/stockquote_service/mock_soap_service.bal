@@ -16,6 +16,7 @@
 
 import ballerina/http;
 import ballerina/log;
+import ballerina/stringutils;
 
 @http:ServiceConfig {
     basePath: "/services"
@@ -26,22 +27,27 @@ service services on new http:Listener(9000) {
         path: "/SimpleStockQuoteService"
     }
     resource function SimpleStockQuoteService(http:Caller caller, http:Request request) {
-        string soapAction = request.getHeader("SOAPAction");
+        log:printInfo("Stock quote service invoked.");
+        string soapAction = validateSoapAction(request.getHeader("SOAPAction"));
         xml requestPayload = checkpanic request.getXmlPayload();
-        string company = requestPayload.Body.symbol.getTextValue();
+        string company = requestPayload.Body.getQuote.request.symbol.getTextValue();
         http:Response response = new; 
         match soapAction {
             "urn:getQuote" => {
-                response.setXmlPayload(<@untainted> getQuote(company));                
+                response.setXmlPayload(<@untainted> getQuote(company));
+                log:printInfo("Stock quote generated.");
             }
             "urn:placeOrder" => {
                 response.setXmlPayload(<@untainted> placeOrder());
+                log:printInfo("The order was placed.");
             }
             "urn:getMarketActivity" => {
                 response.setXmlPayload(<@untainted> getMarketActivity(company));
+                log:printInfo("Market activity generated.");
             }
             "urn:getSimpleQuote" => {
                 response.setXmlPayload(<@untainted> getSimpleQuote(company));
+                log:printInfo("Stock quote generated.");
             }
             _ => {
                 response.statusCode = http:STATUS_BAD_REQUEST;
@@ -149,4 +155,13 @@ function getMarketActivity(string company) returns xml {
                                     </soapenv:Body>
                                 </soapenv:Envelope>`;
     return responsePayload;
+}
+
+function validateSoapAction(string soapAction) returns string {
+    if (soapAction.startsWith("urn:")) {
+        return soapAction;
+    } else {
+        // Remove `"` from soap action.
+        return stringutils:replace(soapAction, "\"", "");
+    }
 }
