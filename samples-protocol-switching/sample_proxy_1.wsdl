@@ -352,6 +352,9 @@
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="SimpleStockQuoteService">
+        <wsdl:port name="SimpleStockQuoteServiceHttpSoapDefaultEndpoint" binding="ns:SimpleStockQuoteServiceSoapDefaultBinding">
+            <soap:address location="http://localhost:9000/services/SimpleStockQuoteService"/>
+        </wsdl:port>
         <wsdl:port name="SimpleStockQuoteServiceHttpSoap11Endpoint" binding="ns:SimpleStockQuoteServiceSoap11Binding">
             <soap:address location="http://localhost:9000/services/SimpleStockQuoteService.SimpleStockQuoteServiceHttpSoap11Endpoint"/>
         </wsdl:port>
