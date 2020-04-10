@@ -31,7 +31,6 @@ swagger: "2.0"
 info:
   description: API Definition of Swagger Petstore
   title: SwaggerPetstore
-  version: 1.0.0
 consumes:
   - application/json
   - application/xml
