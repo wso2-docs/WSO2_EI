@@ -1,0 +1,37 @@
+basePath: /v2
+paths:
+  /pet:
+    post:
+      responses:
+        default:
+          description: Default Response
+      parameters:
+        - description: Sample Payload
+          in: body
+          name: payload
+          required: false
+          schema:
+            type: object
+            properties:
+              payload:
+                type: string
+  /pet/findByStatus:
+    get:
+      responses:
+        default:
+          description: Default Response
+host: "localhost:8290"
+produces:
+  - application/json
+  - application/xml
+schemes:
+  - https
+  - http
+swagger: "2.0"
+info:
+  description: API Definition of Swagger Petstore
+  title: SwaggerPetstore
+  version: 1.0.0
+consumes:
+  - application/json
+  - application/xml
