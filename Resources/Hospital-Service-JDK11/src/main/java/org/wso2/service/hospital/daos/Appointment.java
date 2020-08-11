@@ -13,6 +13,7 @@ public class Appointment {
     private double fee;
     private boolean confirmed;
     private String paymentID;
+    private String appointmentDate;
 
     public String getTime() {
         return time;
@@ -76,5 +77,13 @@ public class Appointment {
 
     public void setPaymentID(String paymentID) {
         this.paymentID = paymentID;
+    }
+
+    public String getAppointmentDate() {
+        return appointmentDate;
+    }
+
+    public void setAppointmentDate(String appointmentDate) {
+        this.appointmentDate = appointmentDate;
     }
 }
