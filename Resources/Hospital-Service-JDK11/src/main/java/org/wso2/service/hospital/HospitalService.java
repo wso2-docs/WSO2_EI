@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class HospitalService {
 
-    private Map<Integer, Appointment> appointments = new HashMap<>();
+    private static Map<Integer, Appointment> appointments = new HashMap();
     private HospitalDAO hospitalDAO = new HospitalDAO();
     List<String> catergories = hospitalDAO.getCatergories();
     List<Doctor> doctorsList = hospitalDAO.getDoctorsList();
@@ -160,5 +160,13 @@ public class HospitalService {
             Status status =new Status("Doctor Already Exist in the system");
             return Response.status(Response.Status.OK).entity(status).type(MediaType.APPLICATION_JSON).build();
         }
+    }
+
+    public static Map<Integer, Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public static void setAppointments(Map<Integer, Appointment> appointments) {
+        HospitalService.appointments = appointments;
     }
 }

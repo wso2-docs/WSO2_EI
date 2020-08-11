@@ -23,6 +23,10 @@ import org.wso2.service.hospital.utils.HealthCareUtil;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,11 +64,56 @@ public class HealthcareService {
         String jsonResponse;
 
         if (stock != null && stock.size() > 0) {
-            return Response.status(Response.Status.OK) .entity(stock).type(MediaType.APPLICATION_JSON).build();
+            return Response.status(Response.Status.OK).entity(stock).type(MediaType.APPLICATION_JSON).build();
         } else {
             Status status = new Status("Could not find any entry for the requested Category");
-            return Response.status(Response.Status.OK) .entity(status).type(MediaType.APPLICATION_JSON).build();
+            return Response.status(Response.Status.OK).entity(status).type(MediaType.APPLICATION_JSON).build();
         }
+    }
+
+    @GET
+    @Path("/appointments/{appointment_id}")
+    public Response getAppointment(@PathParam("appointment_id") int id) {
+        Appointment appointment = HospitalService.getAppointments().get(id);
+        if (appointment != null) {
+            return Response.status(Response.Status.OK).entity(appointment).type(MediaType.APPLICATION_JSON).build();
+        } else {
+            Status status = new Status("Error.There is no appointment with appointment number " + id);
+            return Response.status(Response.Status.OK).entity(status).type(MediaType.APPLICATION_JSON).build();
+        }
+
+    }
+
+    @GET
+    @Path("/appointments/validity/{appointment_id}/")
+    public Response getAppointmentValidityTime(@PathParam("appointment_id") int id) {
+        Appointment appointment = HospitalService.getAppointments().get(id);
+        long diffDays = 0;
+        if (appointment != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date;
+            try {
+                date = dateFormat.parse(appointment.getAppointmentDate());
+                Date toDay = new Date();
+                diffDays = (date.getTime() - toDay.getTime()) / (24 * 60 * 60 * 1000);
+                ;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Status status = new Status(String.valueOf(diffDays));
+            return Response.status(Response.Status.OK).entity(status).type(MediaType.APPLICATION_JSON).build();
+        } else {
+            Status status = new Status("Error.Could not Find the Requested appointment ID");
+            return Response.status(Response.Status.OK).entity(status).type(MediaType.APPLICATION_JSON).build();
+        }
+    }
+
+    @DELETE
+    @Path("/appointments/{appointment_id}/")
+    public Response removeAppointment(@PathParam("appointment_id") int id) {
+        HospitalService.getAppointments().remove(id);
+        Status status = new Status("Appointment is successfully removed");
+        return Response.status(Response.Status.OK).entity(status).type(MediaType.APPLICATION_JSON).build();
     }
 
     @POST
@@ -76,10 +125,10 @@ public class HealthcareService {
             Payment payment = HealthCareUtil.createNewPaymentEntry(paymentSettlement);
             payment.setStatus("Settled");
             HealthcareDao.payments.put(payment.getPaymentID(), payment);
-            return Response.status(Response.Status.OK) .entity(payment).type(MediaType.APPLICATION_JSON).build();
+            return Response.status(Response.Status.OK).entity(payment).type(MediaType.APPLICATION_JSON).build();
         } else {
             Status status = new Status("Error.Could not Find the Requested appointment ID");
-            return Response.status(Response.Status.OK) .entity(status).type(MediaType.APPLICATION_JSON).build();
+            return Response.status(Response.Status.OK).entity(status).type(MediaType.APPLICATION_JSON).build();
         }
     }
 
@@ -87,7 +136,7 @@ public class HealthcareService {
     @Path("/payments")
     public Response getAllPayments() {
         HashMap payments = HealthcareDao.payments;
-        return Response.status(Response.Status.OK) .entity(payments).type(MediaType.APPLICATION_JSON).build();
+        return Response.status(Response.Status.OK).entity(payments).type(MediaType.APPLICATION_JSON).build();
     }
 
     @GET
@@ -98,10 +147,10 @@ public class HealthcareService {
         String jsonResponse;
 
         if (payment != null) {
-            return Response.status(Response.Status.OK) .entity(payment).type(MediaType.APPLICATION_JSON).build();
+            return Response.status(Response.Status.OK).entity(payment).type(MediaType.APPLICATION_JSON).build();
         } else {
             Status status = new Status("Invalid payment id provided");
-            return Response.status(Response.Status.OK) .entity(status).type(MediaType.APPLICATION_JSON).build();
+            return Response.status(Response.Status.OK).entity(status).type(MediaType.APPLICATION_JSON).build();
         }
     }
 
@@ -114,10 +163,10 @@ public class HealthcareService {
         }
         if (this.findDoctorByName(doctor.getName()) == null) {
             HealthcareDao.doctorsList.add(doctor);
-            Status status =new Status("New Doctor Added Successfully");
+            Status status = new Status("New Doctor Added Successfully");
             return Response.status(Response.Status.OK).entity(status).type(MediaType.APPLICATION_JSON).build();
         } else {
-            Status status =new Status("Doctor Already Exist in the system");
+            Status status = new Status("Doctor Already Exist in the system");
             return Response.status(Response.Status.OK).entity(status).type(MediaType.APPLICATION_JSON).build();
         }
     }
@@ -131,7 +180,7 @@ public class HealthcareService {
     }
 
     private Doctor findDoctorByName(String name) {
-        for (Doctor doctor: HealthcareDao.doctorsList) {
+        for (Doctor doctor : HealthcareDao.doctorsList) {
             if (doctor.getName().equals(name)) {
                 return doctor;
             }
