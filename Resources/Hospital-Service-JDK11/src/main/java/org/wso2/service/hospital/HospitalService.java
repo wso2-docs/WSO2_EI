@@ -102,7 +102,7 @@ public class HospitalService {
     }
 
     public Response updatePatientRecord(HashMap<String,Object> patientDetails) {
-        String SSN = (String)patientDetails.get("SSN");
+        String SSN = (String) ((Map)patientDetails.get("patient")).get("ssn");
         List symptoms = (List)patientDetails.get("symptoms");
         List treatments = (List)patientDetails.get("treatments");
 
